@@ -35,7 +35,6 @@ public class TileMapMaker : MapGenerator
         {
             for(int x = 0; x < mapX; x++)
             {
-                tileKind = map[y, x];
                 tileMapObjects[y, x] = PlaceTile(x, y);
             }
         }
@@ -49,6 +48,8 @@ public class TileMapMaker : MapGenerator
                         Quaternion.identity,
                         transform
                         );
+
+        tileKind = map[y, x];
 
         newTile.GetComponent<SpriteRenderer>().sprite = tileSprites[tileKind];  // Set Sprite
         return newTile;
