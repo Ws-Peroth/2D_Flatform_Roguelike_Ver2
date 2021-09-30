@@ -13,8 +13,8 @@ public class TileMapModifier : TileMapMaker
 
     private IEnumerator ModifyTileMap()
     {
-        // 맵과 맵 사이 막힌 부분을 열어주려함
-        // 아직 구현 중
         yield return null;
+
+        print("END");
     }
 }
