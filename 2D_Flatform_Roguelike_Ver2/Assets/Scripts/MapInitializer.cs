@@ -1,38 +1,28 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public struct MapInformation
 {
-    public static int x = 60;   // Map x size
-    public static int y = 60;   // Map y size
+    public static int x = 50;   // Map x 크기
+    public static int y = 50;   // Map y 크기
 }
 public class MapInitializer : MonoBehaviour
 {
-    public float progressCount;
+    [SerializeField] protected bool isDebugMode;
 
     protected int[,] map = new int[MapInformation.y, MapInformation.x];
     protected int mapX;
     protected int mapY;
+
+    public float progressCount;
     protected Type startStructure;
 
     protected void InitMapData()
     {
-        // Progress Reset
+        // Progress 리셋
         progressCount = 0;
 
-        mapX = map.GetLength(1);
-        mapY = map.GetLength(0);
-
-        // Set Default Tile
-        for (int y = 0; y < mapY; y++)
-        {
-            for (int x = 0; x < mapX; x++)
-            {
-                map[y, x] = 1;
-            }
-        }
-
-        // Set Types
+        // 시작지점 구조물 템플릿
         startStructure = new Type(new int[,]
             {
                 { 2,  4,  4,  4,  4,  4,  4,  4,  4,  4,  3 },
@@ -46,31 +36,40 @@ public class MapInitializer : MonoBehaviour
                 { 5, 13, 13, 13, 13, 13, 13, 13, 13, 13,  9 }
             });
     }
-
-    protected class MapLocation
+    protected void InitMapGenerationData()
     {
-        public int x1, y1;
-        public int x2, y2;
-        public int x3, y3;
-        public int x4, y4;
-        public MapLocation()
-        {
-            SetData(0, 0, 0, 0, 0, 0, 0, 0);
-        }
-        public MapLocation(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
-        {
-            SetData(x1, x2, x3, x4, y1, y2, y3, y4);
-        }
+        mapX = map.GetLength(1);
+        mapY = map.GetLength(0);
 
-        public MapLocation SetData(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
+        // map의 값 초기화
+        for (int y = 0; y < mapY; y++)
         {
-            this.y1 = y1; this.x1 = x1;
-            this.y2 = y2; this.x2 = x2;
-            this.y3 = y3; this.x3 = x3;
-            this.y4 = y4; this.x4 = x4;
-            return this;
+            for (int x = 0; x < mapX; x++)
+            {
+                map[y, x] = 1;
+            }
         }
     }
+
+    /// <summary>
+    /// [position information class] field : startX = 0, startY = 0, endX = 0, endY = 0
+    /// </summary>
+    protected class MapLocationPosition
+    {
+        public int startX, endX;
+        public int startY, endY;
+
+        public MapLocationPosition(int startX = 0, int startY = 0, int endX = 0, int endY = 0)
+        {
+            this.startX = startX;
+            this.startY = startY;
+
+            this.endX = endX;
+            this.endY = endY;
+        }
+
+    }
+
 }
 
 public struct Type

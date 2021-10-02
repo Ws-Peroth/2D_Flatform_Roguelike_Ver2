@@ -383,6 +383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progressCount: 0
+  isDebugMode: 1
   tile: {fileID: 4766661967338469159, guid: de73b9c18a8e3b74e9aaadccfc51eb67, type: 3}
   tileSprites:
   - {fileID: 21300000, guid: b225aa337e8dfc745a1ce2c87f3b03fb, type: 3}
