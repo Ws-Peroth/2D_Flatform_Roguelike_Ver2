@@ -1,41 +1,47 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class TileMapMaker : MapGenerateBSP
+public abstract class TileMapMaker : MapGeneratorBSP
 {
-    [SerializeField] private GameObject tile;   // Dummy Tile Object
-    [SerializeField] protected List<Sprite> tileSprites = new List<Sprite>(); // Tilemap Sprites
+    [SerializeField]
+    protected List<Sprite> tileSprites = new List<Sprite>(); // Tilemap Sprites
 
-    protected GameObject[,] tileMapObjects = new GameObject[MapInformation.y, MapInformation.x];
+    [SerializeField]
+    private GameObject _tile;   // Dummy Tile Object
 
-    private Vector3 worldStart;
-    private int tileKind = 0;   // 현재 타일 종류
-    private float tileSize; // 타일 크기
+    private Vector3 _worldStart;
+
+    private int _tileKind;
+    private float _tileSize; // 타일 크기
+
+    protected void InitializeTileMap()
+    {
+        tileMapObjects = new GameObject[mapY, mapX];
+    }
 
     protected void GenerateTileMapObject()
     {
-        // 타일 크기 설정
-        tileSize = tile.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        // 타일 생성 시작 지점 설정
+        _worldStart = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height));
 
-        // 시작 지점 설정
-        worldStart = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height));
+        // 타일 크기 설정
+        _tileSize = _tile.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
 
         // 맵 생성 시작
-        MakeMapBSP();
+        GenerateMapBSP();
 
         // 타일맵 생성
-        CreatTilemap();
+        GenerateTilemap();
 
         // 생성 종료
-        progressCount = 1;
+        // progressCount = 1;
     }
 
-    private void CreatTilemap()
+    private void GenerateTilemap()
     {
-        for(int y = 0; y < mapY; y++)
+        for(var y = 0; y < mapY; y++)
         {
-            for(int x = 0; x < mapX; x++)
+            for(var x = 0; x < mapX; x++)
             {
                 // 해당 위치에 타일맵 생성
                 tileMapObjects[y, x] = PlaceTile(x, y);
@@ -46,20 +52,18 @@ public class TileMapMaker : MapGenerateBSP
     private GameObject PlaceTile(int x, int y)
     {
         // Dummy Tile 생성
-        GameObject newTile =
-            Instantiate(tile,
-                        new Vector3(worldStart.x + (tileSize * x), worldStart.y - (tileSize * y), 0),
+        var newTile =
+            Instantiate(_tile,
+                        new Vector3(_worldStart.x + (_tileSize * x), _worldStart.y - (_tileSize * y), 0),
                         Quaternion.identity,
                         transform
                         );
 
         // map에서 생성할 타일의 종류를 가져옴
-        tileKind = map[y, x];
+        _tileKind = map[y, x];
 
         // 타일 종류에 맞는 Sprite 부여
-        newTile.GetComponent<SpriteRenderer>().sprite = tileSprites[tileKind];
+        newTile.GetComponent<SpriteRenderer>().sprite = tileSprites[_tileKind];
         return newTile;
     }
-
-
 }

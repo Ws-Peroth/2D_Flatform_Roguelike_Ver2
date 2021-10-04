@@ -1,50 +1,38 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 public struct MapInformation
 {
-    public static int x = 50;   // Map x 크기
-    public static int y = 50;   // Map y 크기
+    public const int X = 50;   // Map x 크기
+    public const int Y = 50;   // Map y 크기
 }
+
 public class MapInitializer : MonoBehaviour
 {
-    [SerializeField] protected bool isDebugMode;
+    [SerializeField]
+    protected bool isDebugMode;
 
-    protected int[,] map = new int[MapInformation.y, MapInformation.x];
+    protected GameObject[,] tileMapObjects;
+    protected int[,] map;
     protected int mapX;
     protected int mapY;
 
-    public float progressCount;
+    // public float progressCount;
     protected Type startStructure;
 
-    protected void InitMapData()
+    protected void InitializeMapData(int X = MapInformation.X, int Y = MapInformation.Y)
     {
-        // Progress 리셋
-        progressCount = 0;
+        // Progress 값 리셋
+        // progressCount = 0;
 
-        // 시작지점 구조물 템플릿
-        startStructure = new Type(new int[,]
-            {
-                { 2,  4,  4,  4,  4,  4,  4,  4,  4,  4,  3 },
-                { 6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  11 },
-                { 6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  11 },
-                { 6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  11 },
-                { 6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  11 },
-                { 6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  11 },
-                { 6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
-                { 6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
-                { 5, 13, 13, 13, 13, 13, 13, 13, 13, 13,  9 }
-            });
-    }
-    protected void InitMapGenerationData()
-    {
-        mapX = map.GetLength(1);
-        mapY = map.GetLength(0);
+        print($"map size [{Y}, {X}]");
+        map = new int[Y, X];
+
+        mapX = map.GetLength(0);
+        mapY = map.GetLength(1);
 
         // map의 값 초기화
-        for (int y = 0; y < mapY; y++)
+        for (var y = 0; y < mapY; y++)
         {
-            for (int x = 0; x < mapX; x++)
+            for (var x = 0; x < mapX; x++)
             {
                 map[y, x] = 1;
             }
@@ -81,7 +69,7 @@ public struct Type
     public Type(int[,] structure)
     {
         this.structure = structure;
-        x = structure.GetLength(1);
-        y = structure.GetLength(0);
+        x = structure.GetLength(0);
+        y = structure.GetLength(1);
     }
 }

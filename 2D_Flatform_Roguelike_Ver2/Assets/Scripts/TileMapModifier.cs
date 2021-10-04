@@ -1,15 +1,20 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TileMapModifier : TileMapMaker
 {
-    void Start()
+    private void Start()
     {
+        // 타일맵 초기화
+        InitializeTileMap();
+
+        // 맵 초기화
+        InitializeMapBSP();
+
         // 맵 생성 시작
         GenerateTileMapObject();
 
-        // 맵 수정 코루틴 호출
+        // 재생성 코루틴 호출
         StartCoroutine(ModifyTileMap());
     }
 
@@ -30,8 +35,11 @@ public class TileMapModifier : TileMapMaker
             print($"End [{mapNumber}]");
             mapNumber++;
 
+            // 맵 초기화
+            InitializeMapBSP();
+
             // 타일맵 재생성
-            MakeMapBSP();
+            GenerateMapBSP();
 
             // 타일맵 스프라이트 수정
             ModifyTilemap();
@@ -40,27 +48,28 @@ public class TileMapModifier : TileMapMaker
 
     private void ModifyTilemap()
     {
-        for (int y = 0; y < mapY; y++)
+        for (var y = 0; y < mapY; y++)
         {
-            for (int x = 0; x < mapX; x++)
+            for (var x = 0; x < mapX; x++)
             {
                 // 타일맵 종류를 가져옴
-                int tileKind = map[y, x];
+                var tileKind = map[y, x];
                 
                 // 새로 생성된 타일맵 적용
-                tileMapObjects[y, x].GetComponent<SpriteRenderer>().sprite = tileSprites[tileKind];
+                Sprite sprite = tileSprites[tileKind];
+                tileMapObjects[y, x].GetComponent<SpriteRenderer>().sprite = sprite;
             }
         }
     }
 
     private void ModifyFilledTiles()
     {
-        for (int y = 0; y < mapY; y++)
+        for (var y = 0; y < mapY; y++)
         {
-            for (int x = 0; x < mapX; x++)
+            for (var x = 0; x < mapX; x++)
             {
                 // 타일 종류를 가져옴
-                int tileKind = map[y, x];
+                var tileKind = map[y, x];
 
                 // 타일앱이 16번일 경우 0번 (공백타일)로 대체
                 if (tileKind == 16)
